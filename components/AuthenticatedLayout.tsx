@@ -58,11 +58,11 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
       <footer className="flex h-12 w-full border-t px-4">
         <a
           className="flex items-center justify-center gap-2"
-          href="https://www.alaisteryoung.com"
+          href="https://supabase.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-          &copy; Supabase
+          &copy; Supabase QuickTix Example
         </a>
       </footer>
     </div>

@@ -8,6 +8,7 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@supabase/supabase-js": "^1.35.3",
+    "clsx": "^1.1.1",
     "gravatar-url": "^4.0.1",
     "next": "^12.1.6",
     "react": "^18.1.0",

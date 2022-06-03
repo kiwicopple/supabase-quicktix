@@ -39,6 +39,25 @@ for select using (true);
 create policy "can read all seats" on seats
 for select using (true);
 
+-- Functions
+
+create or replace function reserve_seats(seat_ids uuid[]) returns boolean as $$
+  begin
+    -- make sure all seats are available
+    if not array_length(seat_ids, 1) = array_length(array(
+      select id from seats where id = any(seat_ids) and reserved_by_user_id is null
+    ), 1) then
+      raise exception 'Some seats are already reserved' using errcode = 'RSRVD'; -- error code RSRVD is reserved
+    end if;
+
+    -- reserve seats
+    update seats set reserved_by_user_id = auth.uid() where id = any(seat_ids);
+
+    -- done
+    return true;
+  end;
+$$ language plpgsql security definer;
+
 -- Insert a movie
 do $$
   declare

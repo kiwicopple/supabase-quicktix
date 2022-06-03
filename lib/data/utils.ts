@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 
 export class NotFoundError extends Error {}
 
@@ -12,14 +13,20 @@ export function getPagination(page?: number, size: number = DEFAULT_PAGE_SIZE) {
   return { from, to }
 }
 
-export function useParam(key: string) {
+export function useParams() {
   const { query } = useRouter()
 
-  const param = query[key]
-
-  if (Array.isArray(param)) {
-    return param[0]
-  } else {
-    return param
-  }
+  return useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(query).map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return [key, value[0]]
+          } else {
+            return [key, value]
+          }
+        })
+      ),
+    [query]
+  )
 }
