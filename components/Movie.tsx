@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from '@heroicons/react/solid'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Movie } from '../lib/data/movies'
 
@@ -11,8 +12,10 @@ const Movie = ({ movie }: MovieProps) => {
     <Link href={`/${movie.id}`}>
       <a className="flex flex-col overflow-hidden rounded shadow">
         {movie.thumbnail_url ? (
-          <img
-            className="aspect-[2/3] h-[300px] bg-gray-300"
+          <Image
+            width={200}
+            height={300}
+            className="bg-gray-300"
             src={movie.thumbnail_url}
             alt={movie.title}
           />

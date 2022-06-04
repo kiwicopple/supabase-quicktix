@@ -43,11 +43,21 @@ for select using (true);
 
 create or replace function reserve_seats(seat_ids uuid[]) returns boolean as $$
   begin
+    -- make sure user is authenticated
+    if auth.uid() is null then
+      raise exception 'You must be logged in to reserve seats' using errcode = 'AUTHN';
+    end if;
+
     -- make sure all seats are available
     if not array_length(seat_ids, 1) = array_length(array(
       select id from seats where id = any(seat_ids) and reserved_by_user_id is null
     ), 1) then
       raise exception 'Some seats are already reserved' using errcode = 'RSRVD'; -- error code RSRVD is reserved
+    end if;
+
+    -- can only reserve 3 seats or less
+    if array_length(seat_ids, 1) > 3 then
+      raise exception 'Can only reserve 3 seats or less' using errcode = 'TOMNY'; -- error code TOMNY is too many
     end if;
 
     -- reserve seats
@@ -64,7 +74,7 @@ do $$
     v_movie movies;
   begin
     insert into movies ("title", "thumbnail_url")
-    values ('The Batman', 'https://upload.wikimedia.org/wikipedia/en/f/ff/The_Batman_%28film%29_poster.jpg')
+    values ('The Batman', 'https://vrboaxyqrlqfshjmugrb.supabase.co/storage/v1/object/public/posters/The-Batman-poster.jpeg')
     returning * into v_movie;
 
     insert into seats ("movie_id", "row", "number")
@@ -72,5 +82,4 @@ do $$
     join lateral (select * from generate_series(1,5) as "number") sub on true;
   end;
 $$;
-
 

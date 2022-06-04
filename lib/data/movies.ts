@@ -47,8 +47,8 @@ export async function getMovies(signal?: AbortSignal) {
   return { movies: data }
 }
 
-type MoviesData = Awaited<ReturnType<typeof getMovies>>
-type MoviesError = PostgrestError
+export type MoviesData = Awaited<ReturnType<typeof getMovies>>
+export type MoviesError = PostgrestError
 
 export const useMoviesQuery = (
   options?: UseQueryOptions<MoviesData, MoviesError>
@@ -88,15 +88,27 @@ export async function getMovie(id: string | undefined, signal?: AbortSignal) {
   return { movie: data }
 }
 
-type MovieData = Awaited<ReturnType<typeof getMovie>>
-type MovieError = PostgrestError
+export type MovieData = Awaited<ReturnType<typeof getMovie>>
+export type MovieError = PostgrestError
 
 export const useMovieQuery = (
   id: string | undefined,
   { enabled = true, ...options }: UseQueryOptions<MovieData, MovieError> = {}
-) =>
-  useQuery<MovieData, MovieError>(
+) => {
+  const _enabled = enabled && typeof id !== 'undefined'
+
+  const { isLoading, ...rest } = useQuery<MovieData, MovieError>(
     ['movie', id],
     ({ signal }) => getMovie(id, signal),
-    { enabled: enabled && typeof id !== 'undefined', ...options }
+    {
+      enabled: _enabled,
+      // we're increasing the staleTime to 5 minutes here as we're using realtime
+      // to update the seats
+      staleTime: 300000,
+      ...options,
+    }
   )
+
+  // fake the loading state if we're not enabled
+  return { isLoading: !_enabled || isLoading, ...rest }
+}

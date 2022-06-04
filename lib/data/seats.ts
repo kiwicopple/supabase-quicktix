@@ -1,6 +1,53 @@
 import { PostgrestError } from '@supabase/supabase-js'
+import { useEffect } from 'react'
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query'
 import supabase from '../supabase'
+import { MovieData, Seat } from './movies'
+
+/* Seats Subscription */
+
+export const useSeatsSubscription = (
+  movieId: string | undefined,
+  onUpdate?: (updatedSeat: Seat) => void
+) => {
+  const client = useQueryClient()
+
+  useEffect(() => {
+    let subscription = supabase
+      .from<Seat>('seats')
+      .on('UPDATE', (payload) => {
+        onUpdate?.(payload.new)
+
+        if (movieId) {
+          client.setQueryData<MovieData | undefined>(
+            ['movie', movieId],
+            (previous) => {
+              if (!previous) {
+                return
+              }
+
+              const updatedSeat = payload.new
+
+              return {
+                ...previous,
+                movie: {
+                  ...previous.movie,
+                  seats: previous.movie.seats.map((seat) =>
+                    seat.id === updatedSeat.id ? updatedSeat : seat
+                  ),
+                },
+              }
+            }
+          )
+        }
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
+  }, [movieId, onUpdate])
+}
 
 /* Reserve Seats */
 

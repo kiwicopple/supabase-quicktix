@@ -1,11 +1,18 @@
+import Head from 'next/head'
 import AuthenticatedLayout from '../components/AuthenticatedLayout'
 import { NextPageWithLayout } from '../lib/types'
 
 const BookingsPage: NextPageWithLayout = () => {
   return (
-    <div className="space-y-4">
-      <h2 className="font-bold text-lg">My Bookings</h2>
-    </div>
+    <>
+      <Head>
+        <title>My Bookings | QuickTix</title>
+      </Head>
+
+      <div className="mb-12 space-y-8">
+        <h2 className="font-bold text-lg">My Bookings</h2>
+      </div>
+    </>
   )
 }
 

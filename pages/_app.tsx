@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
-import { NotFoundError } from '../lib/data/utils'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { AuthProvider } from '../lib/auth'
+import { NotFoundError } from '../lib/data/utils'
 import { AppPropsWithLayout } from '../lib/types'
 import '../styles/globals.css'
 
@@ -34,6 +35,7 @@ const CustomApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </Hydrate>
     </QueryClientProvider>
   )
