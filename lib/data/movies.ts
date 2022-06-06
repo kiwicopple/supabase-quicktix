@@ -1,5 +1,6 @@
 import { PostgrestError } from '@supabase/supabase-js'
-import { useQuery, UseQueryOptions } from 'react-query'
+import { useCallback } from 'react'
+import { useQuery, useQueryClient, UseQueryOptions } from 'react-query'
 import supabase from '../supabase'
 import { NotFoundError } from './utils'
 
@@ -97,7 +98,7 @@ export const useMovieQuery = (
 ) => {
   const _enabled = enabled && typeof id !== 'undefined'
 
-  const { isLoading, ...rest } = useQuery<MovieData, MovieError>(
+  const { isLoading, isIdle, ...rest } = useQuery<MovieData, MovieError>(
     ['movie', id],
     ({ signal }) => getMovie(id, signal),
     {
@@ -110,5 +111,18 @@ export const useMovieQuery = (
   )
 
   // fake the loading state if we're not enabled
-  return { isLoading: !_enabled || isLoading, ...rest }
+  return {
+    isLoading: (!_enabled && isIdle) || isLoading,
+    isIdle,
+    ...rest,
+  }
+}
+
+export const useMoviePrefetch = (id: string | undefined) => {
+  const client = useQueryClient()
+  return useCallback(() => {
+    if (id) {
+      client.prefetchQuery(['movie', id], ({ signal }) => getMovie(id, signal))
+    }
+  }, [id])
 }

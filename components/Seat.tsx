@@ -6,12 +6,12 @@ type SeatProps = {
   row: string
   number: number
   state?: 'empty' | 'reserved' | 'selected'
-  onSeatClick: (seatId: string) => void
+  onSeatClick?: (seatId: string) => void
 }
 
 const Seat = ({ id, row, number, state = 'empty', onSeatClick }: SeatProps) => {
   const handleClick = useCallback(() => {
-    onSeatClick(id)
+    onSeatClick?.(id)
   }, [id, onSeatClick])
 
   return (

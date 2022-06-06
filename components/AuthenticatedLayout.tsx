@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
+import { useUser } from '../lib/auth'
 import { useSignOutMutation } from '../lib/data/auth'
-import { useAuth, useUser } from '../lib/auth'
-import Avatar from './Avatar'
+import { useBookingsPrefetch } from '../lib/data/bookings'
 import supabase from '../lib/supabase'
+import Avatar from './Avatar'
 
 const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
   const router = useRouter()
@@ -23,6 +24,8 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
     signOut()
   }, [])
 
+  const prefetchBookings = useBookingsPrefetch()
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="px-4 py-4 md:px-8">
@@ -35,7 +38,10 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
 
           <div className="flex items-center space-x-4">
             <Link href="/bookings">
-              <a className="inline-flex items-center">
+              <a
+                className="inline-flex items-center"
+                onMouseEnter={prefetchBookings}
+              >
                 <Avatar
                   name={user?.user_metadata.full_name}
                   avatarUrl={user?.user_metadata.avatar_url}

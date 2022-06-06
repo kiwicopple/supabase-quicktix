@@ -1,16 +1,21 @@
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Movie } from '../lib/data/movies'
+import { Movie, useMoviePrefetch } from '../lib/data/movies'
 
 type MovieProps = {
   movie: Movie
 }
 
 const Movie = ({ movie }: MovieProps) => {
+  const prefetchMovie = useMoviePrefetch(movie.id)
+
   return (
     <Link href={`/${movie.id}`}>
-      <a className="flex flex-col overflow-hidden rounded shadow">
+      <a
+        className="flex flex-col overflow-hidden rounded shadow"
+        onMouseEnter={prefetchMovie}
+      >
         {movie.thumbnail_url ? (
           <Image
             width={200}
