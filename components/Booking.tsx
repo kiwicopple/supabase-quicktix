@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MovieWithSeats } from '../lib/data/movies'
+import { MovieWithSeats, useMoviePrefetch } from '../lib/data/movies'
 import Seat from './Seat'
 
 export type BookingProps = {
@@ -9,6 +9,8 @@ export type BookingProps = {
 }
 
 const Booking = ({ booking }: BookingProps) => {
+  const prefetchMovie = useMoviePrefetch(booking.id)
+
   return (
     <div className="flex gap-4 overflow-hidden rounded border border-gray-200 shadow">
       <div className="flex items-center">
@@ -41,7 +43,10 @@ const Booking = ({ booking }: BookingProps) => {
 
         <div className="flex justify-end">
           <Link href={`/${booking.id}`}>
-            <a className="flex items-center gap-1 text-gray-700 transition-colors duration-200 text-sm hover:text-blue-600">
+            <a
+              className="flex items-center gap-1 text-gray-700 transition-colors duration-200 text-sm hover:text-blue-600"
+              onMouseEnter={prefetchMovie}
+            >
               Book more seats <ArrowRightIcon className="h-3 w-3" />
             </a>
           </Link>
