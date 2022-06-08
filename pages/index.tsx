@@ -1,13 +1,14 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import { dehydrate, QueryClient } from 'react-query'
+import ErrorDisplay from '../components/ErrorDisplay'
 import Layout from '../components/Layout'
 import Movie from '../components/Movie'
 import { getMovies, useMoviesQuery } from '../lib/data/movies'
 import { NextPageWithLayout } from '../lib/types'
 
 const IndexPage: NextPageWithLayout = () => {
-  const { data } = useMoviesQuery()
+  const { data, isSuccess, isLoading, isError, error } = useMoviesQuery()
 
   return (
     <>
@@ -18,11 +19,15 @@ const IndexPage: NextPageWithLayout = () => {
       <div className="mb-12 space-y-8">
         <h2 className="font-bold text-lg">QuickTix</h2>
 
-        <div className="flex justify-start">
-          {data?.movies.map((movie) => (
-            <Movie key={movie.id} movie={movie} />
-          ))}
-        </div>
+        {isError && <ErrorDisplay error={error} />}
+
+        {isSuccess && (
+          <div className="flex justify-start">
+            {data.movies.map((movie) => (
+              <Movie key={movie.id} movie={movie} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   )

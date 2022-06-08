@@ -1,7 +1,18 @@
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-export class NotFoundError extends Error {}
+export class NotFoundError extends Error {
+  constructor(message?: string) {
+    super(message)
+    this.name = 'NotFoundError'
+  }
+}
+export class NotImplementedError extends Error {
+  constructor(message?: string) {
+    super(message)
+    this.name = 'NotImplementedError'
+  }
+}
 
 export const DEFAULT_PAGE_SIZE = 20
 

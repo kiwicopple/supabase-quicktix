@@ -4,14 +4,16 @@ import { useQuery, useQueryClient, UseQueryOptions } from 'react-query'
 import { useUser } from '../auth'
 import supabase from '../supabase'
 import { MovieWithSeats } from './movies'
-import { NotFoundError } from './utils'
+import { NotFoundError, NotImplementedError } from './utils'
 
 /* Get My Bookings */
 
 export async function getMyBookings(
   userId: string | undefined,
   signal?: AbortSignal
-) {
+): Promise<{
+  bookings: MovieWithSeats[]
+}> {
   if (typeof userId === 'undefined') {
     throw new Error('Invalid User ID')
   }
@@ -41,7 +43,10 @@ export async function getMyBookings(
 }
 
 export type MyBookingsData = Awaited<ReturnType<typeof getMyBookings>>
-export type MyBookingsError = PostgrestError
+export type MyBookingsError =
+  | PostgrestError
+  | NotFoundError
+  | NotImplementedError
 
 export const useMyBookingsQuery = ({
   enabled = true,

@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useCallback, useState } from 'react'
+import ErrorDisplay from '../components/ErrorDisplay'
 import Layout from '../components/Layout'
 import Seats from '../components/Seats'
 import { Seat, useMovieQuery } from '../lib/data/movies'
@@ -12,7 +13,7 @@ import { NextPageWithLayout } from '../lib/types'
 
 const IndexPage: NextPageWithLayout = () => {
   const { movieId } = useParams()
-  const { data, isSuccess, isLoading } = useMovieQuery(movieId)
+  const { data, isSuccess, isLoading, isError, error } = useMovieQuery(movieId)
 
   const [selectedSeatIds, setSelectedSeatIds] = useState<Set<string>>(
     () => new Set<string>()
@@ -56,7 +57,10 @@ const IndexPage: NextPageWithLayout = () => {
         error.code === 'AUTHN'
       ) {
         alert(error.message)
+        return
       }
+
+      console.error(error)
     },
   })
   const onReserve = useCallback(() => {
@@ -71,6 +75,8 @@ const IndexPage: NextPageWithLayout = () => {
 
       <div className="mb-12 space-y-8">
         <h2 className="font-bold text-lg">{data?.movie.title}</h2>
+
+        {isError && <ErrorDisplay error={error} />}
 
         {isSuccess && (
           <div className="flex flex-col items-center gap-6">

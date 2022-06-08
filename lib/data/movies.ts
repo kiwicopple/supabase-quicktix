@@ -2,7 +2,7 @@ import { PostgrestError } from '@supabase/supabase-js'
 import { useCallback } from 'react'
 import { useQuery, useQueryClient, UseQueryOptions } from 'react-query'
 import supabase from '../supabase'
-import { NotFoundError } from './utils'
+import { NotFoundError, NotImplementedError } from './utils'
 
 export type Movie = {
   id: string
@@ -28,7 +28,9 @@ export type MovieWithSeats = Movie & {
 
 /* Get Movies */
 
-export async function getMovies(signal?: AbortSignal) {
+export async function getMovies(signal?: AbortSignal): Promise<{
+  movies: Movie[]
+}> {
   let query = supabase.from<Movie>('movies').select(`*`)
 
   if (signal) {
@@ -49,7 +51,7 @@ export async function getMovies(signal?: AbortSignal) {
 }
 
 export type MoviesData = Awaited<ReturnType<typeof getMovies>>
-export type MoviesError = PostgrestError
+export type MoviesError = PostgrestError | NotFoundError | NotImplementedError
 
 export const useMoviesQuery = (
   options?: UseQueryOptions<MoviesData, MoviesError>
@@ -62,7 +64,12 @@ export const useMoviesQuery = (
 
 /* Get Movie */
 
-export async function getMovie(id: string | undefined, signal?: AbortSignal) {
+export async function getMovie(
+  id: string | undefined,
+  signal?: AbortSignal
+): Promise<{
+  movie: MovieWithSeats
+}> {
   if (typeof id === 'undefined') {
     throw new Error('Invalid ID')
   }
@@ -90,7 +97,7 @@ export async function getMovie(id: string | undefined, signal?: AbortSignal) {
 }
 
 export type MovieData = Awaited<ReturnType<typeof getMovie>>
-export type MovieError = PostgrestError
+export type MovieError = PostgrestError | NotFoundError | NotImplementedError
 
 export const useMovieQuery = (
   id: string | undefined,
