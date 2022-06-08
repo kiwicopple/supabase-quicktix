@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import ErrorDisplay from '../components/ErrorDisplay'
 import Layout from '../components/Layout'
 import Seats from '../components/Seats'
+import SeatsSkeleton from '../components/SeatsSkeleton'
 import { Seat, useMovieQuery } from '../lib/data/movies'
 import {
   useReserveSeatsMutation,
@@ -80,33 +81,44 @@ const IndexPage: NextPageWithLayout = () => {
       </Head>
 
       <div className="mb-12 space-y-8">
-        <h2 className="font-bold text-lg">{data?.movie.title}</h2>
+        {isLoading && (
+          <div>
+            <div className="h-1" />
+            <div className="h-5 w-[40%] animate-pulse rounded bg-gray-200" />
+            <div className="h-1" />
+          </div>
+        )}
+        {isSuccess && (
+          <h2 className="font-bold text-lg">{data?.movie.title}</h2>
+        )}
 
         {isError && <ErrorDisplay error={error} />}
 
-        {isSuccess && (
-          <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
+          {isLoading && <SeatsSkeleton />}
+
+          {isSuccess && (
             <Seats
               seats={data.movie.seats}
               selectedSeatIds={selectedSeatIds}
               handleSeatClick={handleSeatClick}
             />
+          )}
 
-            <hr className="flex self-stretch" />
+          <hr className="flex self-stretch" />
 
-            <div className="flex flex-col gap-2 self-stretch">
-              <button
-                onClick={onReserve}
-                disabled={selectedSeatIds.size <= 0 || isReserving}
-                className="cursor-pointer rounded border px-4 py-2 disabled:cursor-default disabled:bg-gray-100"
-              >
-                {isReserving ? 'Reserving...' : 'Reserve'}{' '}
-                {selectedSeatIds.size} Seats
-              </button>
-              <p className="text-gray-700 text-xs">Max 3 seats per booking</p>
-            </div>
+          <div className="flex flex-col gap-2 self-stretch">
+            <button
+              onClick={onReserve}
+              disabled={selectedSeatIds.size <= 0 || isReserving || !isSuccess}
+              className="cursor-pointer rounded border px-4 py-2 disabled:cursor-default disabled:bg-gray-100"
+            >
+              {isReserving ? 'Reserving...' : 'Reserve'} {selectedSeatIds.size}{' '}
+              Seats
+            </button>
+            <p className="text-gray-700 text-xs">Max 3 seats per booking</p>
           </div>
-        )}
+        </div>
       </div>
     </>
   )

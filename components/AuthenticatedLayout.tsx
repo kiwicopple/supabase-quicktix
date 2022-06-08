@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { useUser } from '../lib/auth'
 import { useSignOutMutation } from '../lib/data/auth'
 import { useBookingsPrefetch } from '../lib/data/bookings'
+import { useMoviesPrefetch } from '../lib/data/movies'
 import supabase from '../lib/supabase'
 import Avatar from './Avatar'
 
@@ -33,6 +34,7 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
     })
   }, [])
 
+  const prefetchMovies = useMoviesPrefetch()
   const prefetchBookings = useBookingsPrefetch()
 
   return (
@@ -41,7 +43,7 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
         <nav className="flex items-center justify-between">
           <div>
             <Link href="/">
-              <a>Home</a>
+              <a onMouseEnter={prefetchMovies}>Home</a>
             </Link>
           </div>
 

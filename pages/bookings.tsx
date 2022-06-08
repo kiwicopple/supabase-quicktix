@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import AuthenticatedLayout from '../components/AuthenticatedLayout'
 import Booking from '../components/Booking'
+import BookingSkeleton from '../components/BookingSkeleton'
 import ErrorDisplay from '../components/ErrorDisplay'
+import SkeletonList from '../components/SkeletonList'
 import { useMyBookingsQuery } from '../lib/data/bookings'
 import { NextPageWithLayout } from '../lib/types'
 
@@ -20,11 +22,16 @@ const BookingsPage: NextPageWithLayout = () => {
         <div>
           {isError && <ErrorDisplay error={error} />}
 
-          {isSuccess && (
-            <div>
-              {data.bookings.map((booking) => (
-                <Booking key={booking.id} booking={booking} />
-              ))}
+          {(isSuccess || isLoading) && (
+            <div className="flex flex-col gap-4">
+              {isLoading && (
+                <SkeletonList skeleton={BookingSkeleton} count={2} />
+              )}
+
+              {isSuccess &&
+                data.bookings.map((booking) => (
+                  <Booking key={booking.id} booking={booking} />
+                ))}
             </div>
           )}
         </div>

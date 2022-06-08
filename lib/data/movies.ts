@@ -62,6 +62,13 @@ export const useMoviesQuery = (
     options
   )
 
+export const useMoviesPrefetch = () => {
+  const client = useQueryClient()
+  return useCallback(() => {
+    client.prefetchQuery(['movies'], ({ signal }) => getMovies(signal))
+  }, [])
+}
+
 /* Get Movie */
 
 export async function getMovie(

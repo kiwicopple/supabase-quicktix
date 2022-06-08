@@ -23,11 +23,11 @@ const Booking = ({ booking }: BookingProps) => {
             alt={booking.title}
           />
         ) : (
-          <div className="aspect-[2/3] h-[300px] bg-gray-300" />
+          <div className="h-[150px] w-[100px] bg-gray-300" />
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 rounded-r pr-4 pb-4 pt-2">
+      <div className="flex flex-1 flex-col justify-between gap-4 rounded-r pr-4 pb-4 pt-2">
         <h3 className="font-medium text-lg">{booking.title}</h3>
 
         <div className="flex flex-wrap gap-2">
