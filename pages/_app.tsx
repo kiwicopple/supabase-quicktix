@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Toaster } from 'react-hot-toast'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { AuthProvider } from '../lib/auth'
@@ -39,6 +40,7 @@ const CustomApp = ({ Component, pageProps }: AppPropsWithLayout) => {
       <Hydrate state={pageProps.dehydratedState}>
         <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        <Toaster position="bottom-left" />
       </Hydrate>
     </QueryClientProvider>
   )

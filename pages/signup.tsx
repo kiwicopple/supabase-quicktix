@@ -2,6 +2,7 @@ import { LockClosedIcon } from '@heroicons/react/solid'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { FormEvent, useCallback } from 'react'
+import toast from 'react-hot-toast'
 import UnauthenticatedLayout from '../components/UnauthenticatedLayout'
 import { useSignUpMutation } from '../lib/data/auth'
 import supabase from '../lib/supabase'
@@ -27,7 +28,11 @@ const SignUpPage: NextPageWithLayout = () => {
         },
         {
           onSuccess() {
+            toast.success('You have signed up successfully!')
             router.replace('/')
+          },
+          onError(error) {
+            toast.error(error.message)
           },
         }
       )

@@ -2,6 +2,7 @@ import { LockClosedIcon } from '@heroicons/react/solid'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { FormEvent, useCallback } from 'react'
+import toast from 'react-hot-toast'
 import UnauthenticatedLayout from '../components/UnauthenticatedLayout'
 import { useSignInMutation } from '../lib/data/auth'
 import supabase from '../lib/supabase'
@@ -23,7 +24,11 @@ const SignInPage: NextPageWithLayout = () => {
         { email: email.toString(), password: password.toString() },
         {
           onSuccess() {
+            toast.success('You have signed in successfully!')
             router.replace('/')
+          },
+          onError(error) {
+            toast.error(error.message)
           },
         }
       )

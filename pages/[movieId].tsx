@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useCallback, useState } from 'react'
+import toast from 'react-hot-toast'
 import ErrorDisplay from '../components/ErrorDisplay'
 import Layout from '../components/Layout'
 import Seats from '../components/Seats'
@@ -8,7 +9,7 @@ import {
   useReserveSeatsMutation,
   useSeatsSubscription,
 } from '../lib/data/seats'
-import { useParams } from '../lib/data/utils'
+import { NotImplementedError, useParams } from '../lib/data/utils'
 import { NextPageWithLayout } from '../lib/types'
 
 const IndexPage: NextPageWithLayout = () => {
@@ -48,9 +49,16 @@ const IndexPage: NextPageWithLayout = () => {
 
   const { mutate, isLoading: isReserving } = useReserveSeatsMutation({
     onSuccess() {
+      toast.success('Your seats have been reserved!')
+
       setSelectedSeatIds(new Set())
     },
     onError(error) {
+      if (error instanceof NotImplementedError) {
+        toast.error(error.message)
+        return
+      }
+
       if (
         error.code === 'RSRVD' ||
         error.code === 'TOMNY' ||
@@ -59,8 +67,6 @@ const IndexPage: NextPageWithLayout = () => {
         alert(error.message)
         return
       }
-
-      console.error(error)
     },
   })
   const onReserve = useCallback(() => {

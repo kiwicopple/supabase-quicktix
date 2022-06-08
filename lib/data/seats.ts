@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query'
 import supabase from '../supabase'
 import { MovieData, Seat } from './movies'
+import { NotImplementedError } from './utils'
 
 /* Seats Subscription */
 
@@ -76,7 +77,7 @@ export async function reserveSeats(
 }
 
 type ReserveSeatsData = Awaited<ReturnType<typeof reserveSeats>>
-type ReserveSeatsError = PostgrestError
+type ReserveSeatsError = PostgrestError | NotImplementedError
 
 export const useReserveSeatsMutation = ({
   onSuccess,

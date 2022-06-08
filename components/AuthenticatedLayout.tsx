@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { useUser } from '../lib/auth'
 import { useSignOutMutation } from '../lib/data/auth'
 import { useBookingsPrefetch } from '../lib/data/bookings'
@@ -21,7 +22,15 @@ const AuthenticatedLayout = ({ children }: PropsWithChildren<{}>) => {
 
   const { mutate: signOut } = useSignOutMutation()
   const onSignOut = useCallback(() => {
-    signOut()
+    signOut(undefined, {
+      onSuccess() {
+        toast.success('You have signed out successfully!')
+        router.replace('/')
+      },
+      onError(error) {
+        toast.error(error.message)
+      },
+    })
   }, [])
 
   const prefetchBookings = useBookingsPrefetch()
