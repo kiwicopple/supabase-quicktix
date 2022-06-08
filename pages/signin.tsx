@@ -37,9 +37,14 @@ const SignInPage: NextPageWithLayout = () => {
   )
 
   const signInWithGitHub = useCallback(() => {
-    supabase.auth.signIn({
-      provider: 'github',
-    })
+    supabase.auth.signIn(
+      {
+        provider: 'github',
+      },
+      {
+        redirectTo: process.env.NEXT_PUBLIC_OAUTH_REDIRECT_TO,
+      }
+    )
   }, [])
 
   return (
