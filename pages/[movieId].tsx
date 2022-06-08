@@ -1,3 +1,4 @@
+import { CursorClickIcon } from '@heroicons/react/outline'
 import Head from 'next/head'
 import { useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -94,7 +95,7 @@ const IndexPage: NextPageWithLayout = () => {
 
         {isError && <ErrorDisplay error={error} />}
 
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-end gap-6">
           {isLoading && <SeatsSkeleton />}
 
           {isSuccess && (
@@ -107,12 +108,13 @@ const IndexPage: NextPageWithLayout = () => {
 
           <hr className="flex self-stretch" />
 
-          <div className="flex flex-col gap-2 self-stretch">
+          <div className="flex flex-col items-end gap-2">
             <button
               onClick={onReserve}
               disabled={selectedSeatIds.size <= 0 || isReserving || !isSuccess}
-              className="cursor-pointer rounded border px-4 py-2 disabled:cursor-default disabled:bg-gray-100"
+              className="flex cursor-pointer items-center rounded border px-4 py-2 disabled:cursor-default disabled:bg-gray-100"
             >
+              <CursorClickIcon className="mr-2 h-4 w-4" />{' '}
               {isReserving ? 'Reserving...' : 'Reserve'} {selectedSeatIds.size}{' '}
               Seats
             </button>

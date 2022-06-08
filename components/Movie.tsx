@@ -28,10 +28,12 @@ const Movie = ({ movie }: MovieProps) => {
           <div className="aspect-[2/3] h-[300px] bg-gray-300" />
         )}
 
-        <div className="flex items-center justify-between rounded-b border-b border-l border-r border-gray-200 p-2">
-          <h3 className="font-medium text-lg">{movie.title}</h3>
+        <div className="flex items-center justify-between gap-2 rounded-b border-b border-l border-r border-gray-200 p-2">
+          <h3 className="w-[150px] overflow-hidden overflow-ellipsis whitespace-nowrap font-medium text-lg">
+            {movie.title}
+          </h3>
 
-          <ArrowRightIcon className="h-5 w-5" />
+          <ArrowRightIcon className="h-5 w-5 flex-shrink-0" />
         </div>
       </a>
     </Link>

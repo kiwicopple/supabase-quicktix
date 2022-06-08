@@ -26,7 +26,7 @@ const Seats = ({ seats, selectedSeatIds, handleSeatClick }: SeatsProps) => {
   }, [seats])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full flex-col gap-4 overflow-x-scroll px-4">
       {seatsByRow.map((row, i) => (
         <div key={i} className="flex flex-row gap-4">
           {row.map((seat) => (

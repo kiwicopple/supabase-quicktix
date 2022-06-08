@@ -83,3 +83,18 @@ do $$
   end;
 $$;
 
+-- Insert a movie
+do $$
+  declare
+    v_movie movies;
+  begin
+    insert into movies ("title", "thumbnail_url")
+    values ('Everything Everywhere All at Once', 'https://vrboaxyqrlqfshjmugrb.supabase.co/storage/v1/object/public/posters/Everything-Everywhere-All-at-Once-poster.jpeg')
+    returning * into v_movie;
+
+    insert into seats ("movie_id", "row", "number")
+    select v_movie.id, chr("row" + 64) as "row", sub.number from generate_series(1,10) as "row"
+    join lateral (select * from generate_series(1,5) as "number") sub on true;
+  end;
+$$;
+
